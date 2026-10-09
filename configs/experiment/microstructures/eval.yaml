@@ -1,0 +1,38 @@
+# @package _global_
+dataset_name: microstructures
+run_base: eval
+
+defaults:
+  - /protocol/microstructures
+  - /callbacks/generation/generate
+  - /callbacks/generation/mode_coverage
+  - override /data: microstructures
+  - override /model: microstructures/second_stage
+
+
+report_name: microstructures_eval
+
+tags: [microstructures, second_stage, eval]
+
+protocol:
+  n_samples: 200  
+  n_trials: 100   
+
+trainer:
+  limit_test_batches: 1.0
+
+data:
+  batch_size: 1  
+  view: mode_rollouts
+  dataset:
+    sample_cache: 32
+
+model:
+  first_stage_ckpt: null 
+  compile: false         
+
+callbacks:
+  generate_test: {keep_outputs: false}
+
+sampling:
+  method: azula

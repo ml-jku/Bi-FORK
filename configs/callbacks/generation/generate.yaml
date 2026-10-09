@@ -1,0 +1,38 @@
+# @package callbacks
+# The ONE place generation happens: one instance per split; every other callback reads it. See docs/decisions.md.
+generate_val: &generate
+  _target_: bifurcation.callbacks.generation.Generate
+  n_samples: ${protocol.n_samples}
+  n_trials: ${protocol.n_trials}
+  num_steps: ${protocol.num_steps}
+  first_scored_frame: ${protocol.first_scored_frame}
+  max_abs_distance: ${protocol.max_abs_distance}
+  max_rel_distance: ${protocol.max_rel_distance}
+  n_modes: ${protocol.n_modes}
+  label: ${protocol.label}
+  representative_rollouts: ${protocol.representative_rollouts}
+  reference_report: ${oc.select:protocol.reference_report,null}
+  relax: ${oc.select:protocol.relax,null}
+  residual: ${oc.select:protocol.residual,null}
+  distance_metric: ${oc.select:protocol.distance_metric,mse}
+  vary_context_rollout: ${oc.select:protocol.vary_context_rollout,false}
+  method: ${sampling.method}
+  autocast: ${oc.select:sampling.autocast,false}
+  every_n_epochs: 1  # the cadence of THIS instance; the test one runs once, ungated
+  split: val
+  samples: null      # explicit picks (h5 keys or indices); null: evenly spaced automatic pick
+  samples_per_batch: 1  # samples per flow integration (GPU: raise until it saturates;
+                        # full-res samplers always run 1 -- node counts differ per sample)
+  keep_outputs: true
+  min_fraction: ${protocol.min_fraction}
+  evaluate_on_rejected: false
+  evaluate_on_blurred: false
+  report_dir: ${oc.select:report_dir,null}
+
+generate_train:
+  <<: *generate
+  split: train
+
+generate_test:
+  <<: *generate
+  split: test

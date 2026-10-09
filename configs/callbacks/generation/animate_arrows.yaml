@@ -1,0 +1,19 @@
+# @package callbacks
+# gif per condition: generated (red) vs best-matched ground truth (black), zoom rows, whole rollout at stride 1.
+animate_arrows_val: &animate_arrows
+  _target_: bifurcation.callbacks.generation.Animate
+  # Rendering a GIF costs far more than the numbers do, so this reader thins itself out;
+  # it still only ever runs on epochs the producer generated on.
+  every_n_epochs: 10
+  split: val
+  animator:
+    _target_: bifurcation.viz.microstructures.animate_generated_arrows
+    _partial_: true
+    zooms: [1.0, 0.15]
+    n_arrows: 300
+    stride: 1
+    interval: 250
+
+animate_arrows_train:
+  <<: *animate_arrows
+  split: train

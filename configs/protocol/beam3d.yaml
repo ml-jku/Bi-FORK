@@ -1,0 +1,32 @@
+# @package _global_
+seed: 42
+
+protocol:
+  # JSD is per sample over ITS trials, so each sample needs the full draw over the 50 bins.
+  n_samples: 8        # evaluated samples
+  n_trials: 360       # generated rollouts per sample
+  num_steps: 10       # DDIM steps (eta=0)
+  first_scored_frame: 5  # scoring starts after the longest observed history (>= max cond_frames)
+  max_abs_distance: null  
+  max_rel_distance: 0.5   # as a fraction of the own displacement magnitude
+  min_fraction: 0.0       # a mode counts as covered from this share of the trials
+
+  # continuous modes: the buckling azimuth, discretized into fixed bins shared by all samples
+  n_modes: 50
+  label:
+    _target_: bifurcation.metrics.beam3d.label_Y
+    _partial_: true
+    n_bins: ${protocol.n_modes}
+
+  reference_report:
+    _target_: bifurcation.metrics.beam3d.reference_report
+    _partial_: true
+    n_bins: 36
+
+  draw:
+    _target_: bifurcation.viz.beam3d.draw_mode
+    _partial_: true
+  representative_rollouts:
+    _target_: bifurcation.metrics.beam3d.representative_rollouts
+    _partial_: true
+    n_modes: 8

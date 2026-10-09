@@ -1,0 +1,15 @@
+# @package callbacks
+# The numbers taken from the generated trials: coverage / JSD / rejection, plus the label histograms. Free.
+mode_coverage_val: &mode_coverage
+  _target_: bifurcation.callbacks.generation.ModeCoverage
+  min_fraction: ${protocol.min_fraction}
+  report_dir: ${oc.select:report_dir,null}  # null: log_dir/csv of the run
+  split: val
+
+mode_coverage_train:
+  <<: *mode_coverage
+  split: train
+
+mode_coverage_test:
+  <<: *mode_coverage
+  split: test

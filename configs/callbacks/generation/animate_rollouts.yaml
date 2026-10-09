@@ -1,0 +1,19 @@
+# @package callbacks
+# gif per condition: deformed configurations (affine + fluctuation, colored by |y|), truth left vs model right.
+animate_rollouts_val: &animate_rollouts
+  _target_: bifurcation.callbacks.generation.Animate
+  # Rendering a GIF costs far more than the numbers do, so this reader thins itself out;
+  # it still only ever runs on epochs the producer generated on.
+  every_n_epochs: 10
+  split: val
+  tag: rollout
+  animator:
+    _target_: bifurcation.viz.microstructures.animate_generated_rollouts
+    _partial_: true
+    zooms: [1.0, 0.15]
+    stride: 1
+    interval: 250
+
+animate_rollouts_train:
+  <<: *animate_rollouts
+  split: train

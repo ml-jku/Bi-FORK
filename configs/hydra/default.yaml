@@ -1,0 +1,15 @@
+run:
+  dir: ${paths.log_dir}
+sweep:
+  dir: ${paths.log_dir}
+  subdir: ${hydra.job.num}
+job:
+  chdir: false
+
+job_logging:
+  handlers:
+    file:
+      filename: ${hydra.runtime.output_dir}/${task_name}.log
+  loggers:
+    matplotlib:
+      level: WARNING

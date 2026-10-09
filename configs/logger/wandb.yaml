@@ -1,0 +1,9 @@
+wandb:
+  _target_: lightning.pytorch.loggers.WandbLogger
+  save_dir: ${paths.output_dir} 
+  project: ${dataset_name}-${stage_noun}
+  entity: ${oc.env:WANDB_ENTITY,null}
+  offline: ${env.wandb_offline}
+  tags: ${tags}
+  name: null                    
+  group: null

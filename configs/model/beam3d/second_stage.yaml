@@ -1,0 +1,65 @@
+defaults:
+  - /model/beam3d/first_stage@autoencoder
+
+_target_: bifurcation.models.second_stage.LatentFlowMatching
+first_stage_ckpt: ???
+first_stage_reference: false
+cond_frames: 1
+mask_cond_mean: true
+cache_fields: true
+bifurcation_loss_weight: 0.1
+
+backbone:
+  _target_: bifurcation.models.components.sit_approximator.SiTApproximator
+  in_dim: 128
+  cond_dim: 128
+  hidden_size: 256
+  num_heads: 8  # epoch9090-mc_mae0.030489.ckpt was trained with 8; the weights load with any value but only 8 is correct
+  depth: 5
+  mlp_ratio: 2.0
+  theta: 10000.0
+  rollout_time_conditioning: false
+  predict_bifurcation: true
+
+conditioner:
+  _target_: bifurcation.models.components.conditioners.UConditioner
+  in_dim: 1
+  dim: 128
+  hidden: 512
+
+coupling:
+  _target_: bifurcation.models.transport.coupling.ot
+  _partial_: true
+
+transport:
+  _target_: bifurcation.models.transport.transport.Transport
+  path: gvp
+  prediction: data
+
+sampler:
+  _target_: azula.sample.DDIMSampler
+  _partial_: true
+  eta: 0.0
+  silent: true
+
+losses:
+  flow:
+    _target_: bifurcation.metrics.generic.frame_masked_mse
+    _partial_: true
+  angle:
+    _target_: bifurcation.metrics.generic.frame_masked_angle
+    _partial_: true
+loss_weights:
+  flow: 1.0
+  angle: 0.0
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 1.0e-4
+  weight_decay: 0.0
+
+scheduler: null
+scheduler_interval: null
+
+compile: ${env.compile}

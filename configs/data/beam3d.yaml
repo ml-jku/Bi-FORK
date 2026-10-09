@@ -1,0 +1,38 @@
+_target_: bifurcation.datasets.RolloutDataModule
+dataset:
+  _target_: bifurcation.datasets.beam3d.Beam3dPklDataset
+  _partial_: true  
+  path: ${paths.data_dir}/beam3d
+  n_structures: null
+  orbit_modes: null  
+
+view: snapshots
+sampling: balanced  
+batch_size: 128
+num_workers: ${env.num_workers}
+
+normalization:  
+  y:
+    mean: [0.0, 0.0, -1.3939906155783943]
+    std: [1.5825163020770145, 1.5825163020770145, 1.8646914577760667]
+  u:
+    mean: [3.219145326364518]
+    std: [2.503778135948311]
+  f:
+    mean: [0.932321547739426, 0.9297531623110592, 0.93015800747198]
+    std: [0.5508759937005401, 0.5470899067588408, 0.5514989390663456]
+
+num_nodes: null
+transform:
+  train: &azimuth_rotation
+    _target_: bifurcation.datasets.beam3d.apply_random_azimuth_rotation
+    _partial_: true
+  val: *azimuth_rotation
+  test: *azimuth_rotation
+
+# Splits that replay the same random draws every epoch
+fixed_draws: null
+
+seed: ${seed}
+test_split: test
+min_steps_per_epoch: 1

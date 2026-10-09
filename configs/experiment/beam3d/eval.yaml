@@ -1,0 +1,33 @@
+# @package _global_
+dataset_name: beam3d
+run_base: eval
+
+defaults:
+  - /protocol/beam3d
+  - /callbacks/generation/generate
+  - /callbacks/generation/mode_coverage
+  - override /data: beam3d
+  - override /model: beam3d/second_stage
+
+report_name: beam3d_eval_${run_base}
+
+tags: [beam3d, second_stage, eval]
+
+trainer:
+  limit_test_batches: 1.0
+
+data:
+  batch_size: 1  
+  view: rollouts  
+
+model:
+  first_stage_ckpt: null  
+  compile: false          
+  autoencoder:
+    compile: false        
+
+callbacks:
+  generate_test: {keep_outputs: false}
+
+sampling:
+  method: azula  

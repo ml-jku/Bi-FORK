@@ -1,0 +1,38 @@
+# @package _global_
+defaults:
+  - /protocol/allencahn
+  - /callbacks/generation/generate
+  - /callbacks/generation/mode_coverage
+  - /callbacks/generation/mode_gallery
+  - override /data: allencahn
+  - override /model: allencahn/second_stage
+
+dataset_name: allencahn
+run_base: second_stage_flux
+stage_noun: second-stage
+tags: [allencahn, second_stage, flux]
+
+data:
+  view: realization_rollouts
+  sampling: uniform
+  batch_size: 64
+  time_stride: 1
+  dataset:
+    sample_cache: 2
+    latent_path: ${paths.allencahn_latents_dir}
+
+gpu_cache: true
+callbacks:
+  cache:
+    devices: {default: cpu}
+
+sampling:
+  method: azula
+
+trainer:
+  max_epochs: -1
+  max_steps: 500_000
+  check_val_every_n_epoch: null
+  val_check_interval: 10_000
+  log_every_n_steps: 10
+  num_sanity_val_steps: 0

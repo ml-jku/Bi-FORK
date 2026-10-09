@@ -1,0 +1,20 @@
+# @package callbacks
+reconstruction_metrics:
+  _target_: bifurcation.callbacks.reconstruction.ReconstructionMetrics
+  n_samples: 4
+  n_frames: 4
+  every_n_epochs: 10
+  seed: 0
+  metrics:
+    mae:
+      _target_: bifurcation.metrics.generic.masked_mae
+      _partial_: true
+    mse:
+      _target_: bifurcation.metrics.generic.masked_mse
+      _partial_: true
+    rmse:
+      _target_: bifurcation.metrics.generic.masked_rmse
+      _partial_: true
+    rel_l2:
+      _target_: bifurcation.metrics.generic.relative_l2
+      _partial_: true

@@ -1,0 +1,14 @@
+# @package callbacks
+# GIF per condition: the generated beam (red) against the ground-truth branch it landed on (black). Free.
+animate_beams_val:
+  _target_: bifurcation.callbacks.generation.Animate
+  tag: beams
+  animator:
+    _target_: bifurcation.viz.beam3d.animate_generated_beam
+    _partial_: true
+    stride: 8
+    interval: 150
+  # Rendering a GIF costs far more than the numbers do, so this reader thins itself out;
+  # it still only ever runs on epochs the producer generated on.
+  every_n_epochs: 10
+  split: val

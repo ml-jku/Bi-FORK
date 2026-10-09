@@ -1,0 +1,32 @@
+_target_: bifurcation.datasets.RolloutDataModule
+dataset:
+  _target_: bifurcation.datasets.microstructures.MicrostructuresDataset
+  _partial_: true  
+  path: ${paths.data_dir}/microstructures
+  latent_path: null
+  n_structures: null
+
+view: snapshots 
+sampling: uniform 
+batch_size: 16  
+num_workers: ${env.num_workers}
+pin_memory: true
+persistent_workers: true
+prefetch_factor: 5
+
+normalization:  
+  y:
+    mean: [6.890827020100687e-09, -2.5559172556199883e-08]
+    std: 0.059892117977142334
+  u:
+    mean: 0.5104222297668457
+    std: 0.5284769535064697
+
+num_nodes: null  
+
+transform: null
+fixed_draws: null
+
+seed: ${seed}
+test_split: test
+min_steps_per_epoch: 1

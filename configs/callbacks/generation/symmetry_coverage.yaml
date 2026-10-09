@@ -1,0 +1,20 @@
+# @package callbacks
+# Allen-Cahn only: the 3 symmetry/coverage JSD metrics (mode coverage, translation, rotation)
+# of bifurcation.metrics.allencahn_symmetry, computed from the same Generate results
+# mode_coverage.yaml reads -- see bifurcation.callbacks.generation.SymmetryCoverage. Needs
+# generate_test/val/train's keep_outputs left at its default true (unlike mode_coverage, which
+# tolerates keep_outputs=false).
+symmetry_coverage_val: &symmetry_coverage
+  _target_: bifurcation.callbacks.generation.SymmetryCoverage
+  bins_per_axis: 8
+  mode: null  # fix one GT branch for the translation/rotation histograms; null pools every branch
+  report_dir: ${oc.select:report_dir,null}  # null: log_dir/csv of the run
+  split: val
+
+symmetry_coverage_train:
+  <<: *symmetry_coverage
+  split: train
+
+symmetry_coverage_test:
+  <<: *symmetry_coverage
+  split: test

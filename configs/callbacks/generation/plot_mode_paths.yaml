@@ -1,0 +1,9 @@
+# @package callbacks
+# The picture for CONTINUOUS modes (beam3d): every generated beam, placed by the direction it chose.
+plot_mode_paths_val:
+  _target_: bifurcation.callbacks.generation.ModePlot
+  tag: mode_paths
+  plotter:
+    _target_: bifurcation.viz.beam3d.plot_mode_paths
+    _partial_: true
+  split: val

@@ -1,0 +1,25 @@
+# @package _global_
+defaults:
+  - /callbacks/reconstruction/metrics_allencahn
+  - /callbacks/reconstruction/plot_allencahn
+  - override /data: allencahn
+  - override /model: allencahn/first_stage
+
+dataset_name: allencahn
+run_base: first_stage_vit
+stage_noun: first-stage
+tags: [allencahn, first_stage, vit, compressed]
+
+gpu_cache: false
+
+data:
+  batch_size: 64
+
+trainer:
+  max_epochs: -1
+  max_steps: 100_000
+  limit_train_batches: 200
+  limit_val_batches: 50
+  check_val_every_n_epoch: 10
+  num_sanity_val_steps: 0
+  log_every_n_steps: 10

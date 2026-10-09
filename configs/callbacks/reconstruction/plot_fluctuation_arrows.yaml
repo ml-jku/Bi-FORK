@@ -1,0 +1,17 @@
+# @package callbacks
+plot_fluctuation_arrows_val: &arrows
+  _target_: bifurcation.callbacks.reconstruction.ReconstructionPlot
+  tag: fluctuation_arrows
+  n_samples: 2
+  n_frames: 1  # plots use the last trainable frame
+  every_n_epochs: 5
+  seed: 0
+  split: val
+  plotter:
+    _target_: bifurcation.viz.microstructures.plot_fluctuation_arrows
+    _partial_: true
+    side_by_side: true  # false = overlaid GT+pred
+
+plot_fluctuation_arrows_train:
+  <<: *arrows
+  split: train

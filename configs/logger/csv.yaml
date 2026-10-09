@@ -1,0 +1,7 @@
+# tracks losses, next to the checkpoints
+csv:
+  _target_: lightning.pytorch.loggers.CSVLogger
+  save_dir: ${paths.model_dir}
+  name: csv
+  prefix: ""
+  version: "" 

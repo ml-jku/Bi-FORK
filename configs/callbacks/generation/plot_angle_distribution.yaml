@@ -1,0 +1,10 @@
+# @package callbacks
+# Bin-free companion to plot_mode_paths (viz.beam3d.plot_angle_distribution); runs at eval too.
+plot_angle_distribution_val: &plot_angle_distribution
+  _target_: bifurcation.callbacks.generation.ModePlot
+  tag: angle_distribution
+  plotter:
+    _target_: bifurcation.viz.beam3d.plot_angle_distribution
+    _partial_: true
+  max_samples: 5  # a random 5 of the evaluated conditions, not 5 trials within one plot
+  split: val

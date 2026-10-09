@@ -1,0 +1,5 @@
+# @package callbacks
+budget:
+  _target_: bifurcation.callbacks.budget.FileBudget
+  max_files: 2000
+  enabled: true

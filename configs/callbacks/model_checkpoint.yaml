@@ -1,0 +1,10 @@
+# Monitors val/loss, not train/loss; see docs/decisions.md.
+model_checkpoint:
+  _target_: lightning.pytorch.callbacks.ModelCheckpoint
+  dirpath: ${paths.output_dir}/checkpoints
+  filename: epoch{epoch:03d}-val{val/loss:.5f}
+  auto_insert_metric_name: false
+  monitor: val/loss
+  mode: min
+  save_last: true
+  save_top_k: 1

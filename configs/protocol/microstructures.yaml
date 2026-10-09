@@ -1,0 +1,30 @@
+# @package _global_
+# Evaluation protocol for microstructures, inherited by every model on it. Drawing is `sampling`.
+seed: 43
+
+protocol:
+  n_samples: 4        # evaluated samples
+  n_trials: 4         # generated rollouts per sample
+  num_steps: 50       # integration steps from noise to data
+  first_scored_frame: 0
+  max_abs_distance: 0.1
+  max_rel_distance: null
+  min_fraction: 0.0      
+
+  # discrete modes: bins are the own mode count of the sample
+  n_modes: null
+  label:
+    _target_: bifurcation.metrics.microstructures.label_Y
+    _partial_: true
+
+  reference_report:
+    _target_: bifurcation.metrics.microstructures.reference_report
+    _partial_: true
+  draw:
+    _target_: bifurcation.viz.microstructures.draw_mode
+    _partial_: true
+    style: both   
+    gain: 1.0     
+  representative_rollouts:
+    _target_: bifurcation.metrics.microstructures.representative_rollouts
+    _partial_: true

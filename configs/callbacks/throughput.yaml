@@ -1,0 +1,5 @@
+# @package callbacks
+# iterations/sec + samples/sec, logged every `window` train batches
+throughput:
+  _target_: bifurcation.callbacks.throughput.Throughput
+  window: 50

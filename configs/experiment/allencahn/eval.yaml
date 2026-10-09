@@ -1,0 +1,43 @@
+# @package _global_
+dataset_name: allencahn
+run_base: eval
+
+defaults:
+  - /protocol/allencahn
+  - /callbacks/generation/generate
+  - /callbacks/generation/mode_coverage
+  - /callbacks/generation/symmetry_coverage
+  - /callbacks/generation/symmetry_gallery
+  - override /data: allencahn
+  - override /model: allencahn/second_stage
+
+report_name: allencahn_eval_${run_base}
+
+tags: [allencahn, second_stage, eval]
+
+trainer:
+  limit_test_batches: 1
+
+env:
+  compile: false
+
+data:
+  batch_size: 4
+  view: realization_rollouts
+  sampling: uniform
+
+model:
+  first_stage_ckpt: null 
+  cache_fields: true
+
+sampling:
+  method: azula  
+callbacks:
+  generate_test: {}
+  mode_gallery_test:
+    _target_: bifurcation.callbacks.generation.ModeGallery
+    draw: ${protocol.draw}
+    representative_rollouts: ${protocol.representative_rollouts}
+    max_per_mode: 4
+    distance_metric: ${oc.select:protocol.distance_metric,mse}
+    split: test

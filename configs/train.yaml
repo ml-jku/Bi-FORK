@@ -1,0 +1,30 @@
+defaults:
+  - _self_
+  - paths: ${env}
+  - logger: wandb_and_csv # W&B for dashboards, CSV losses next to the checkpoints
+  - trainer: default
+  - callbacks: default
+  - data: null          # set by the experiment
+  - model: null         # set by the experiment
+  - protocol: null      # set by the experiment: the evaluation protocol of the dataset
+  - env: local          # local | remote -- the one machine switch
+  - experiment: ???     # beam3d/*, microstructures/*, or allencahn/first_stage
+  - ablation: null      # an optional delta on top, e.g. beam3d/overfit_first_stage
+  - hydra: default
+  - debug: null         # default | fdr -- a tiny deterministic run, stack it last
+
+task_name: train
+seed: 42
+tags: []
+print_config: true
+matmul_precision: high
+train: true
+test: false
+ckpt_path: null  # resume from this checkpoint
+
+gpu_cache: true  # cache the whole set on the device, no DataLoader; per-key placement in callbacks.cache.devices
+
+
+# One name for the paths and the logger. The tag keeps a swept run from
+# overwriting the checkpoints of the run it was swept from.
+run_name: ${run_base}${override_tag:${hydra:job.override_dirname}}

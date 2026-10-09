@@ -1,0 +1,83 @@
+_target_: bifurcation.models.first_stage.FirstStage
+compile: ${env.compile}
+cache_keys: [y, p, f, wallpaper]
+
+backbone:
+  _target_: bifurcation.models.composites.perceiver_autoencoder.PerceiverAutoencoder
+  dim_latent: &dim_latent 128
+  latent_heads: null
+  field_embedding:
+    _target_: bifurcation.models.composites.microstructures.MicrostructuresFieldEmbedding
+    dim: 256
+    hidden: 128
+    num_wallpaper_groups: 17
+    num_node_types: 8
+    use_wallpaper: true
+    use_node_type: true
+    use_periodic: &use_periodic false
+    pos_scale: &pos_scale 200.0
+    act: &act
+      _target_: torch.nn.GELU
+      _partial_: true
+      approximate: none
+  query_embedding:
+    _target_: bifurcation.models.composites.microstructures.MicrostructuresQueryEmbedding
+    dim_embed: *dim_latent
+    dim_query: &dim_query 160
+    dropout: 0.05
+    use_periodic: *use_periodic
+    pos_scale: *pos_scale
+  encoder:
+    _target_: bifurcation.models.components.encoder.PerceiverEncoder
+    dim_latent: *dim_latent
+    num_latents: 128
+    dim_context: 512
+    num_block_cross: 1
+    num_block_self: 1
+    heads_cross: 32
+    dim_head_cross: 16
+    heads_self: 16
+    dim_head_self: 16
+    qk_norm: false
+    dropout_latent: 0.0
+    act: *act
+  decoder:
+    _target_: bifurcation.models.components.decoder.PerceiverDecoder
+    outputs:
+      y: 2
+    dim_latent: *dim_latent
+    dim_query: *dim_query
+    num_block_self: 1
+    num_block_cross: 0
+    heads_out: 32
+    dim_head_out: 16
+    heads_self: 16
+    dim_head_self: 16
+    qk_norm: false
+    act: *act
+
+losses:
+  y:
+    _target_: bifurcation.metrics.generic.masked_mse_cosine
+    _partial_: true
+    cosine_weight: 0.0
+loss_weights:
+  y: 1.0
+
+metrics:
+  angle:
+    _target_: bifurcation.metrics.generic.masked_angle
+    _partial_: true
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 1.0e-4
+  weight_decay: 1.0e-2
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.CosineAnnealingLR
+  _partial_: true
+  T_max: -1
+  eta_min: 1.5e-5
+scheduler_interval: step

@@ -1,0 +1,45 @@
+# python -m bifurcation.eval ckpt_path=/path/to.ckpt [env=...]
+# env has to match the one the checkpoint was trained with: local is the small architecture.
+defaults:
+  - _self_
+  - paths: ${env}
+  - logger: csv         # the numbers belong next to the checkpoint, not on a dashboard
+  - trainer: eval      # `default` plus the mandatory step count filled in: nothing trains here
+  - callbacks: null     # the experiment brings its eval callbacks
+  - data: null          # set by the experiment
+  - model: null         # set by the experiment
+  - protocol: null      # set by the experiment: the evaluation protocol of the dataset
+  - env: local          # local | remote -- the one machine switch
+  - experiment: ???     # beam3d/{first_stage,second_stage,stflow} and the same for microstructures
+  - ablation: null      # an optional delta on top, e.g. beam3d/overfit_first_stage
+  - hydra: default
+  - debug: null         # default | fdr -- a tiny deterministic run, stack it last
+
+task_name: eval
+seed: 42
+tags: [eval]
+print_config: true
+matmul_precision: high
+gpu_cache: false  # one pass over the test split, so there is nothing to amortise
+
+# See train.yaml: `sampling` is how this model draws, `protocol` is what is then measured
+# on those draws, per dataset and shared by every model on it.
+sampling:
+  method: midpoint
+  # bf16 autocast around generate_rollouts (integration and decode): ~1.5-2x on Ampere and
+  # later. It perturbs the outputs slightly, so keep it off for reference-matching runs.
+  autocast: false
+
+train: false
+test: true
+
+ckpt_path: ???     # the checkpoint to score
+reference: false   # true: ckpt_path is a published reference checkpoint, converted on load
+
+# One row per sample as it finishes, plus a report and a summary at the end. Streaming
+# matters here: a full beams pass is hours, and a killed run would otherwise leave nothing.
+report_name: eval
+report_dir: ${paths.results_dir}/${report_name}
+
+
+run_name: ${run_base}${override_tag:${hydra:job.override_dirname}}

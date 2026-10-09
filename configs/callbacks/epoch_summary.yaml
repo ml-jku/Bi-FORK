@@ -1,0 +1,6 @@
+# @package callbacks
+# One tidy line per epoch: train/loss, val/loss, best-so-far, it/s. The train/val gap is the overfitting signal.
+epoch_summary:
+  _target_: bifurcation.callbacks.progress.EpochSummary
+  monitor: val/loss
+  mode: min

@@ -1,0 +1,17 @@
+# @package callbacks
+# Allen-Cahn only: the picture behind symmetry_coverage's gen_mode_coverage_jsd -- one trial per
+# sample plotted against every one of its K_ GT branches, headed by Metric 1's similarity score.
+# See bifurcation.callbacks.generation.SymmetryGallery. Needs generate_test/val/train's
+# keep_outputs left at its default true, same requirement as symmetry_coverage.yaml.
+symmetry_gallery_val: &symmetry_gallery
+  _target_: bifurcation.callbacks.generation.SymmetryGallery
+  trial: 0  # which of the sample's trials to plot; 0: stable across epochs
+  split: val
+
+symmetry_gallery_train:
+  <<: *symmetry_gallery
+  split: train
+
+symmetry_gallery_test:
+  <<: *symmetry_gallery
+  split: test

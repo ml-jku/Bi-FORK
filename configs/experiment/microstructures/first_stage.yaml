@@ -1,0 +1,32 @@
+# @package _global_
+defaults:
+  - /callbacks/reconstruction/metrics
+  - /callbacks/reconstruction/plot_fluctuation_magnitudes
+  - /callbacks/reconstruction/plot_fluctuation_arrows
+  - override /data: microstructures
+  - override /model: microstructures/first_stage
+
+dataset_name: microstructures
+run_base: first_stage
+stage_noun: first-stage   
+
+tags: [microstructures, first_stage]
+
+first_stage_cache_devices:
+  local: {default: cpu}
+  remote: {}  
+
+callbacks:
+  cache:
+    devices: ${first_stage_cache_devices.${env.name}}
+
+trainer:
+  max_epochs: -1
+  min_epochs: 1
+  max_steps: 500_000
+  limit_train_batches: null
+  limit_val_batches: 200
+  check_val_every_n_epoch: null
+  val_check_interval: 10_000
+  num_sanity_val_steps: 0
+  log_every_n_steps: 100

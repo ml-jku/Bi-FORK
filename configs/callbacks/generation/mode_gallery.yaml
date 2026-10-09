@@ -1,0 +1,9 @@
+# @package callbacks
+# The picture behind gen_coverage: a row per ground-truth mode, the outputs beside it, EMPTY on collapse.
+mode_gallery_val:
+  _target_: bifurcation.callbacks.generation.ModeGallery
+  draw: ${protocol.draw}
+  representative_rollouts: ${protocol.representative_rollouts}
+  max_per_mode: 4
+  distance_metric: ${oc.select:protocol.distance_metric,mse}
+  split: val

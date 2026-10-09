@@ -1,0 +1,10 @@
+defaults:
+  - model_checkpoint
+  - learning_rate_monitor
+  - rich_progress_bar
+  - epoch_summary  # one clean train/val-loss line per epoch, readable in a captured log
+  - model_summary
+  - throughput
+  - cache   # does nothing unless gpu_cache=true
+  - budget  # refuses a run that would write more figures than anyone will look at  lang-ok
+  - _self_

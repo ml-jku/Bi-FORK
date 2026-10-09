@@ -1,0 +1,16 @@
+# @package callbacks
+plot_fluctuation_magnitudes_val: &magnitudes
+  _target_: bifurcation.callbacks.reconstruction.ReconstructionPlot
+  tag: fluctuation_magnitudes
+  n_samples: 2
+  n_frames: 1  # plots use the last trainable frame
+  every_n_epochs: 5
+  seed: 0
+  split: val
+  plotter:
+    _target_: bifurcation.viz.microstructures.plot_fluctuation_magnitudes
+    _partial_: true
+
+plot_fluctuation_magnitudes_train:
+  <<: *magnitudes
+  split: train

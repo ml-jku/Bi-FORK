@@ -1,0 +1,70 @@
+_target_: bifurcation.models.first_stage.FirstStage
+compile: false
+cache_keys: [y, p]
+
+init_ckpt: null
+init_strict: false
+init_allowed_missing: [backbone.bottleneck.]
+
+backbone:
+  _target_: bifurcation.models.composites.allencahn.AllenCahnViTAutoencoder
+  grid_shape: [64, 64, 64]
+
+  encoder:
+    _target_: bifurcation.models.components.vit3d.VisionTransformer3DEncoder
+    _partial_: true
+    in_chans: 1
+    patch_size: &patch_size [8, 8, 8]
+    embed_dim: &embed_dim 192
+    depth: 6
+    num_heads: 6
+    mlp_ratio: &mlp_ratio 4.0
+    qkv_bias: &qkv_bias true
+    drop_rate: &drop_rate 0.0
+    attn_drop_rate: &attn_drop_rate 0.0
+
+  decoder:
+    _target_: bifurcation.models.components.vit3d.VisionTransformer3DDecoder
+    _partial_: true
+    out_chans: 1
+    embed_dim: *embed_dim
+    patch_size: *patch_size
+    decoder_embed_dim: 192
+    decoder_depth: 4
+    decoder_num_heads: 6
+    mlp_ratio: *mlp_ratio
+    qkv_bias: *qkv_bias
+    drop_rate: *drop_rate
+    attn_drop_rate: *attn_drop_rate
+
+  patch_unembed:
+    _target_: bifurcation.models.components.vit3d.PatchUnembed3D
+    _partial_: true
+    out_chans: 1
+    patch_size: *patch_size
+
+  bottleneck:
+    _target_: bifurcation.models.components.vit3d.SpatialTokenBottleneck3D
+    _partial_: true
+    factor: 2
+    latent_dim: 384
+
+losses:
+  y:
+    _target_: bifurcation.metrics.generic.masked_mse
+    _partial_: true
+loss_weights:
+  y: 1.0
+
+metrics:
+  mae:
+    _target_: bifurcation.metrics.generic.masked_mae
+    _partial_: true
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 2.0e-4
+
+scheduler: null
+scheduler_interval: null

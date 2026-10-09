@@ -1,0 +1,67 @@
+defaults:
+  - /model/allencahn/first_stage@autoencoder
+
+_target_: bifurcation.models.second_stage.LatentFlowMatching
+first_stage_ckpt: ???
+first_stage_reference: false
+cond_frames: 1
+mask_cond_mean: true
+cache_fields: false
+compile: ${env.compile}
+
+backbone:
+  _target_: bifurcation.models.components.sit_approximator.SiTApproximator
+  in_dim: 384
+  cond_dim: 192
+  hidden_size: 256
+  num_heads: 8
+  depth: 4
+  mlp_ratio: 2.0
+  theta: 10000.0
+  rollout_time_conditioning: true
+  predict_bifurcation: false
+
+conditioner:
+  _target_: bifurcation.models.components.conditioners.UConditioner
+  in_dim: 2
+  dim: 192
+  hidden: 256
+
+coupling:
+  _target_: bifurcation.models.transport.coupling.ot
+  _partial_: true
+
+transport:
+  _target_: bifurcation.models.transport.transport.Transport
+  path: linear
+  prediction: data
+
+sampler:
+  _target_: azula.sample.DDIMSampler
+  _partial_: true
+  eta: 0.0
+  silent: true
+
+losses:
+  flow:
+    _target_: bifurcation.metrics.generic.frame_masked_mse
+    _partial_: true
+loss_weights:
+  flow: 1.0
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 1.0e-4
+  weight_decay: 1.0e-2
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.CosineAnnealingLR
+  _partial_: true
+  T_max: -1
+  eta_min: 1.0e-6
+scheduler_interval: step
+
+autoencoder:
+  compile: false
+  init_ckpt: null

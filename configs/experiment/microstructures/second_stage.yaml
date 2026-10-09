@@ -1,0 +1,63 @@
+# @package _global_
+dataset_name: microstructures
+run_base: second_stage
+stage_noun: second-stage   
+
+defaults:
+  - /protocol/microstructures
+  - /callbacks/generation/generate
+  - /callbacks/generation/mode_coverage
+  - /callbacks/generation/mode_gallery
+  - /callbacks/generation/animate_arrows
+  - /callbacks/generation/animate_rollouts
+  - override /data: microstructures
+  - override /model: microstructures/second_stage
+
+tags: [microstructures, second_stage]
+
+data:
+  view: mode_rollouts
+  sampling: balanced
+  dataset:
+    sample_cache: 32
+
+sampling:
+  method: azula
+
+model:
+  transport:
+    path: gvp
+
+callbacks:
+  mc_mae_checkpoint:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    dirpath: ${paths.output_dir}/checkpoints/mc_mae
+    filename: "epoch{epoch:03d}-mc_mae{val/gen_mc_mae:.6f}"
+    auto_insert_metric_name: false
+    monitor: val/gen_mc_mae
+    mode: min
+    save_top_k: 3
+  mode_jsd_checkpoint:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    dirpath: ${paths.output_dir}/checkpoints/mode_jsd
+    filename: "epoch{epoch:03d}-mode_jsd{val/gen_mode_jsd:.6f}"
+    auto_insert_metric_name: false
+    monitor: val/gen_mode_jsd
+    mode: min
+    save_top_k: 3
+  overall_mc_mse_checkpoint:
+    _target_: lightning.pytorch.callbacks.ModelCheckpoint
+    dirpath: ${paths.output_dir}/checkpoints/overall_mc_mse
+    filename: "epoch{epoch:03d}-overall_mc_mse{val/overall_mc_mse:.6f}"
+    auto_insert_metric_name: false
+    monitor: val/overall_mc_mse
+    mode: min
+    save_top_k: 1
+
+trainer:
+  max_epochs: -1
+  max_steps: 2_000_000
+  check_val_every_n_epoch: null 
+  val_check_interval: 10_000
+  log_every_n_steps: 10
+  num_sanity_val_steps: 0

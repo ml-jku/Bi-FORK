@@ -1,0 +1,5 @@
+# @package callbacks
+cache:
+  _target_: bifurcation.callbacks.caching.PrecomputeCache
+  enabled: ${gpu_cache}
+  devices: {}  # per-key cache device, e.g. {default: cuda, p: cpu, y: cpu}; unlisted -> training device

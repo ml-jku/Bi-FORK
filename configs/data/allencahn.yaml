@@ -1,0 +1,32 @@
+_target_: bifurcation.datasets.RolloutDataModule
+dataset:
+  _target_: bifurcation.datasets.allencahn.AllenCahnPklDataset
+  _partial_: true
+  path: ${paths.data_dir}/allencahn
+  latent_path: null
+  n_structures: null
+  sample_cache: 4
+
+
+view: snapshots
+sampling: balanced
+batch_size: 128
+num_workers: ${env.num_workers}
+pin_memory: true
+persistent_workers: true
+prefetch_factor: 2
+
+normalization:
+  y:
+    mean: 0.00016844086349010468
+    std: 0.5492771863937378
+  u:
+    mean: [0.05931803956627846, 0.5156775712966919]
+    std: [0.019904430955648422, 0.2820991575717926]
+
+num_nodes: null
+transform: null
+fixed_draws: null
+seed: ${seed}
+test_split: test
+min_steps_per_epoch: 1

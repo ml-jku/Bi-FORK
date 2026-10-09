@@ -1,0 +1,27 @@
+# @package _global_
+dataset_name: beam3d
+run_base: second_stage
+stage_noun: second-stage   
+
+defaults:
+  - /protocol/beam3d
+  - /callbacks/generation/mode_gallery
+  - /callbacks/generation/plot_angle_distribution
+  - override /data: beam3d
+  - override /model: beam3d/second_stage
+
+tags: [beam3d, second_stage]
+
+data:
+  view: rollouts 
+  batch_size: 64
+
+sampling:
+  method: azula
+
+trainer:
+  max_epochs: -1 
+  max_steps: 1000000
+  log_every_n_steps: 50
+  check_val_every_n_epoch: null
+  val_check_interval: 50000  

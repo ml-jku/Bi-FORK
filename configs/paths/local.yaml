@@ -1,0 +1,16 @@
+root_dir: .
+
+data_dir: data
+logs_root: runs/logs
+models_root: runs/models
+
+run_id: ${run_name}/seed_${seed}
+log_dir: ${paths.logs_root}/${dataset_name}/${paths.run_id}/${task_name}
+model_dir: ${paths.models_root}/${dataset_name}/${paths.run_id}
+
+eval_dir: ${paths.model_dir}/eval
+results_dir: ${paths.root_dir}/output/${dataset_name}
+
+figure_dir: ${paths.log_dir}/figures
+
+output_dir: ${hydra:runtime.output_dir}

@@ -1,0 +1,17 @@
+# @package callbacks
+# deformed beam at the last evaluated frame, top|side view, GT vs prediction
+plot_beam3d_val: &plot_beam3d
+  _target_: bifurcation.callbacks.reconstruction.ReconstructionPlot
+  tag: beam
+  n_samples: 3
+  n_frames: 1  # plots use the last trainable frame
+  every_n_epochs: 5
+  seed: 0
+  split: val
+  plotter:
+    _target_: bifurcation.viz.beam3d.plot_beam_reconstruction
+    _partial_: true
+
+plot_beam3d_train:
+  <<: *plot_beam3d
+  split: train

@@ -1,0 +1,28 @@
+root_dir: /path/to/bifurcation
+
+data_dir: /path/to/data
+logs_root: /path/to/logs
+models_root: /path/to/models
+
+# this dataset is not under data_dir on the server
+beam3d_dir: /path/to/beams
+microstructures_dir: /path/to/microstructures
+microstructures_latents_dir: /path/to/microstructures/128
+allencahn_dir: /path/to/allencahn
+allencahn_latents_dir: /path/to/allencahn/latents
+
+run_id: ${run_name}/seed_${seed}
+
+# task_name splits train from eval: both entry points put their hydra record
+# here, and without it an eval run would overwrite how the training run was launched.
+log_dir: ${paths.logs_root}/${dataset_name}/${paths.run_id}/${task_name}
+model_dir: ${paths.models_root}/${dataset_name}/${paths.run_id}
+# Scoring a rollout costs GPU hours, so the tables are kept with the checkpoint that
+# produced them. Cross-run tables and thesis figures go to results_dir.
+eval_dir: ${paths.model_dir}/eval
+results_dir: ${paths.root_dir}/output/${dataset_name}
+
+# Figures are regenerable, so they are kept with the logs, not the checkpoints.
+figure_dir: ${paths.log_dir}/figures
+
+output_dir: ${hydra:runtime.output_dir}

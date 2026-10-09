@@ -1,0 +1,19 @@
+# @package _global_
+defaults:
+  - /callbacks/reconstruction/metrics
+  - /callbacks/reconstruction/plot_beam3d
+  - override /data: beam3d
+  - override /model: beam3d/first_stage
+
+dataset_name: beam3d
+run_base: first_stage
+stage_noun: first-stage   
+
+tags: [beam3d, first_stage]
+
+trainer:
+  max_epochs: -1 
+  max_steps: 300000
+  log_every_n_steps: 50
+  check_val_every_n_epoch: null
+  val_check_interval: 5000
